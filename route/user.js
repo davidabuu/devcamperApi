@@ -1,0 +1,11 @@
+const express = require('express');
+const { getUsers, createUser, getUser, updateUser, deleteUser } = require('../controller/user');
+const advancedResults = require('../middleware/advancedResult');
+const User = require('../models/User');
+const {protect, authorize} = require('../middleware/auth');
+const routes = express.Router({mergeParams: true});
+routes.use(protect);
+routes.use(authorize('admin'));
+routes.route('/').get(advancedResults(User), getUsers).post(createUser);
+routes.route('/:id').get(getUser).put(updateUser).delete(deleteUser);
+module.exports = routes;
